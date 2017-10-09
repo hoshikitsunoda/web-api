@@ -64,7 +64,12 @@ app.put('/note/:id', (req, res) => {
 })
 
 app.delete('/note/:id', (req, res) => {
-  
+  MongoClient.connect(url, (err, db) => {
+    if (err) {
+      console.error(err)
+      res.sendStatus(500)
+      process.exit(1)
+    }
 })
 
 app.listen(3000, () => {

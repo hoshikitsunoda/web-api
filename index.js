@@ -51,16 +51,7 @@ app.put('/note/:id', (req, res) => {
       res.sendStatus(500)
       process.exit(1)
     }
-    const noteId = parseInt(req.params.id, 10)
-    /*
-    const content = req.body.find(content => {
-      return content.id === noteId
-    })
-    if (!content) {
-      return res.sendStatus(404)
-    }
-    Object.assign({}, req.body, { id: uuidv4() })
-    */
+    const noteId = { id: req.params.id }
     db.collection('note')
       .updateOne(noteId, { $set: req.body })
       .then(() => res.sendStatus(200))

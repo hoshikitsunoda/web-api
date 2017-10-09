@@ -73,6 +73,12 @@ app.delete('/note/:id', (req, res) => {
     const noteId = { _id: req.params.id }
     db.collection('note')
       .deleteOne(noteId)
+      .catch((err) => {
+        console.error(err)
+        res.sendStatus(400)
+      })
+      .then(() => db.close())
+  })
 })
 
 app.listen(3000, () => {

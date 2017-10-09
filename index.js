@@ -44,6 +44,13 @@ app.post('/note', (req, res) => {
 })
 
 app.put('/note', (req, res) => {
+  MongoClient.connect(url, (err, db) => {
+    if (err) {
+      console.error(err)
+      res.sendStatus(500)
+      process.exit(1)
+    }
+  })
 })
 
 app.listen(3000, () => {

@@ -3,6 +3,7 @@ const app = express()
 var bodyParser = require('body-parser')
 const { MongoClient } = require('mongodb')
 const url = 'mongodb://localhost/library'
+const uuidv4 = require('uuid/v4')
 
 app.use(bodyParser.json())
 
@@ -33,8 +34,27 @@ app.post('/note', (req, res) => {
       process.exit(1)
     }
     db.collection('note')
-      .insertOne(req.body)
+      .insertOne(Object.assign({ _id: uuidv4() }, req.body))
       .then(() => res.sendStatus(201))
+      .catch((err) => {
+        console.error(err)
+        res.sendStatus(400)
+      })
+      .then(() => db.close())
+  })
+})
+
+app.put('/note/:id', (req, res) => {
+  MongoClient.connect(url, (err, db) => {
+    if (err) {
+      console.error(err)
+      res.sendStatus(500)
+      process.exit(1)
+    }
+    const noteId = { _id: req.params.id }
+    db.collection('note')
+      .updateOne(noteId, { $set: req.body })
+      .then(() => res.sendStatus(200))
       .catch((err) => {
         console.error(err)
         res.sendStatus(400)

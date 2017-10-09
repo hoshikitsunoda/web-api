@@ -34,7 +34,7 @@ app.post('/note', (req, res) => {
       process.exit(1)
     }
     db.collection('note')
-      .insertOne(req.body)
+      .insertOne(Object.assign({ _id: uuidv4() }, req.body))
       .then(() => res.sendStatus(201))
       .catch((err) => {
         console.error(err)
@@ -51,7 +51,7 @@ app.put('/note/:id', (req, res) => {
       res.sendStatus(500)
       process.exit(1)
     }
-    const noteId = { id: req.params.id }
+    const noteId = { _id: req.params.id }
     db.collection('note')
       .updateOne(noteId, { $set: req.body })
       .then(() => res.sendStatus(200))
